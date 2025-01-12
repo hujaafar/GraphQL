@@ -156,13 +156,13 @@ const CrazyAuditStats = () => {
           <p style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
             {formatSize(totalUp)}
           </p>
-          <p>Total Up</p>
+          <p> Done </p>
         </div>
         <div style={{ color: "#f44336" }}>
           <p style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
             {formatSize(totalDown)}
           </p>
-          <p>Total Down</p>
+          <p> Received </p>
         </div>
       </div>
     </div>

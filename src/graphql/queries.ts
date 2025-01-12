@@ -177,7 +177,7 @@ export const GET_TOTAL_AND_BREAKDOWN_XP = gql`
       }
     }
     piscineGoXP: transaction_aggregate(
-      where: { type: { _eq: "xp" }, path: { _like: "%piscine-go%" } }
+      where: { type: { _eq: "xp" }, path: { _like: "%bh-piscine%" } }
     ) {
       aggregate {
         sum {
@@ -211,6 +211,45 @@ export const GET_TOTAL_AND_BREAKDOWN_XP = gql`
           amount
         }
       }
+    }
+  }
+`;
+
+
+export const GET_SKILL_TRANSACTIONS = gql`
+  query GetSkillTransactions {
+    skillTransactions: transaction(
+      where: {
+        _and: [
+          { type: { _neq: "xp" } }
+          { type: { _neq: "up" } }
+          { type: { _neq: "down" } }
+          { type: { _neq: "level" } }
+        ]
+      }
+    ) {
+      type
+      amount
+    }
+  }
+`;
+
+
+export const GET_PROJECT_TRANSACTIONS = gql`
+  query GetProjectTransactions {
+    transaction(
+      where: {
+        type: { _eq: "xp" }
+        object: { type: { _eq: "project" } }
+      }
+      order_by: { createdAt: asc }
+    ) {
+      amount
+      object {
+        type
+        name
+      }
+      createdAt
     }
   }
 `;

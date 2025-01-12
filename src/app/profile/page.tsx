@@ -1,29 +1,124 @@
-'use client';
+"use client";
 
-import React from 'react';
-import CrazyAuditStats from '@/components/CrazyAudit';
+import React from "react";
+import { motion } from "framer-motion";
+import CrazyAuditsTable from "@/components/AuditsTable";
+import CrazyAuditStats from "@/components/CrazyAudit";
+import RankDisplay from "@/components/LevelProgressChart";
+import CrazyProgressChart from "@/components/ProgressChart";
+import CrazyRadarChart from "@/components/RadarCharts";
+import CrazyProjectCards from "@/components/TransactionList";
+import UserInfo from "@/components/UserInfo";
+import SidebarXPChart from "@/components/XPOverviewCard";
 
 const ProfilePage = () => {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-6">
-      <div className="max-w-7xl mx-auto space-y-12">
-        {/* Header */}
-        <header className="text-center">
-          <h1 className="text-5xl font-bold text-white drop-shadow-lg">
-            Welcome to Your Profile
-          </h1>
-          <p className="mt-2 text-lg text-gray-300">
-            Track your progress, stats, and achievements.
-          </p>
-        </header>
+  const handleLogout = () => {
+    // Example logout logic
+    console.log("User logged out");
+    window.location.href = "/login"; // Replace with your logout logic
+  };
 
-        {/* Crazy Audit Stats */}
-        <section>
-          <h2 className="text-3xl font-bold text-white mb-4">Audit Stats</h2>
-          <CrazyAuditStats />
-        </section>
+  return (
+    <motion.div
+      /**
+       * Animate the same gradient background as LoginPage
+       */
+      initial={{ backgroundPosition: "0% 50%" }}
+      animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+      transition={{ duration: 10, repeat: Infinity }}
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        // Same gradient as login:
+        backgroundImage:
+          "linear-gradient(120deg, #ffafbd, #ffc3a0, #2193b0, #6dd5ed)",
+        backgroundSize: "200% 200%",
+        padding: "20px",
+        color: "#fff", // light text for clarity on bright background
+        fontFamily: "'Poppins', sans-serif",
+      }}
+    >
+      {/* Logout Button */}
+      <div style={{ textAlign: "right", marginBottom: "20px" }}>
+        <button
+          onClick={handleLogout}
+          style={{
+            padding: "10px 20px",
+            background: "linear-gradient(90deg, #ff6b6b, #f7797d)",
+            borderRadius: "30px",
+            color: "#fff",
+            fontSize: "1rem",
+            fontWeight: "bold",
+            border: "none",
+            cursor: "pointer",
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+            transition: "all 0.3s ease",
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.transform = "scale(1.05)")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.transform = "scale(1.0)")
+          }
+        >
+          Logout
+        </button>
       </div>
-    </div>
+
+      {/* Page Title */}
+      <div style={{ textAlign: "center", marginBottom: "40px" }}>
+        <h1 style={{ fontSize: "3rem", fontWeight: "bold" }}>User Profile</h1>
+        <p style={{ fontSize: "1.2rem" }}>
+          Explore your progress, audits, and achievements.
+        </p>
+      </div>
+
+      {/* User Info Section */}
+      <div style={{ marginBottom: "40px" }}>
+        <UserInfo />
+      </div>
+
+      {/* XP Overview and Audit Stats Section */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gap: "20px",
+          marginBottom: "40px",
+        }}
+      >
+        <SidebarXPChart />
+        <CrazyAuditStats />
+      </div>
+
+      {/* Level Progress and Skill Radar Section */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gap: "20px",
+          marginBottom: "40px",
+        }}
+      >
+        <RankDisplay />
+        <CrazyRadarChart />
+      </div>
+
+      {/* Progress Chart and Audits Table Section */}
+      <div style={{ marginBottom: "40px" }}>
+        <CrazyProgressChart />
+      </div>
+
+      <div style={{ marginBottom: "40px" }}>
+        <CrazyAuditsTable />
+      </div>
+
+      {/* Project Transactions Section */}
+      <div>
+        <CrazyProjectCards />
+      </div>
+    </motion.div>
   );
 };
 
