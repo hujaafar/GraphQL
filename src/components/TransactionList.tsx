@@ -49,7 +49,7 @@ export const CrazyTable = ({ transactions }: { transactions: Transaction[] }) =>
             <tr>
               <th className="py-3 px-6 text-left font-semibold">Name</th>
               <th className="py-3 px-6 text-left font-semibold">Type</th>
-              <th className="py-3 px-6 text-left font-semibold">Size</th>
+              <th className="py-3 px-6 text-left font-semibold">XP</th>
               <th className="py-3 px-6 text-left font-semibold">Date</th>
             </tr>
           </thead>
@@ -60,7 +60,12 @@ export const CrazyTable = ({ transactions }: { transactions: Transaction[] }) =>
             transition={{ duration: 0.5 }}
           >
             {filteredTransactions.map((transaction, index) => {
-              const amountInKB = Math.ceil(transaction.amount / 1000); // Convert bytes to kB
+              const amount = transaction.amount;
+              const size =
+                amount < 1000
+                  ? `${amount} B` // Display in bytes
+                  : `${Math.ceil(amount / 1000)} kB`; // Convert bytes to kB for larger amounts
+
               return (
                 <motion.tr
                   key={index}
@@ -71,7 +76,7 @@ export const CrazyTable = ({ transactions }: { transactions: Transaction[] }) =>
                 >
                   <td className="py-3 px-6 border-b">{transaction.object.name}</td>
                   <td className="py-3 px-6 border-b capitalize">{transaction.object.type}</td>
-                  <td className="py-3 px-6 border-b">{amountInKB} kB</td>
+                  <td className="py-3 px-6 border-b">{size}</td>
                   <td className="py-3 px-6 border-b">
                     {new Date(transaction.createdAt).toLocaleDateString()} at{" "}
                     {new Date(transaction.createdAt).toLocaleTimeString()}

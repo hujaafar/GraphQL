@@ -4,7 +4,7 @@ import React from "react";
 import { ApolloClient, InMemoryCache, ApolloProvider as Provider } from "@apollo/client";
 
 const client = new ApolloClient({
-  uri: "https://learn.reboot01.com/api/graphql-engine/v1/graphql", // Replace with your endpoint
+  uri: "https://learn.reboot01.com/api/graphql-engine/v1/graphql", 
   cache: new InMemoryCache(),
   headers: {
     Authorization: `Bearer ${localStorage.getItem("authToken")}`, 
