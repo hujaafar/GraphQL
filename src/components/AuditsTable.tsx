@@ -5,6 +5,13 @@ import { useQuery } from "@apollo/client";
 import { GET_AUDITS } from "@/graphql/queries";
 import { motion } from "framer-motion";
 
+interface Audit {
+  group: {
+    captainLogin: string;
+    createdAt: string;
+  };
+}
+
 const CrazyAuditsTable = () => {
   const { data, loading, error } = useQuery(GET_AUDITS);
   const [filter, setFilter] = useState("");
@@ -17,8 +24,9 @@ const CrazyAuditsTable = () => {
       <p style={{ textAlign: "center", color: "#f44336" }}>Error fetching data</p>
     );
 
-  const validAudits = data?.user[0]?.validAudits?.nodes || [];
-  const failedAudits = data?.user[0]?.failedAudits?.nodes || [];
+  // Cast valid/failed audits to Audit[]
+  const validAudits = (data?.user[0]?.validAudits?.nodes as Audit[]) || [];
+  const failedAudits = (data?.user[0]?.failedAudits?.nodes as Audit[]) || [];
 
   // Filter data based on audit type
   const auditsToDisplay =
@@ -28,7 +36,7 @@ const CrazyAuditsTable = () => {
       ? failedAudits
       : [...validAudits, ...failedAudits];
 
-  const filteredAudits = auditsToDisplay.filter((audit: any) =>
+  const filteredAudits = auditsToDisplay.filter((audit: Audit) =>
     audit.group.captainLogin.toLowerCase().includes(filter.toLowerCase())
   );
 
@@ -154,8 +162,8 @@ const CrazyAuditsTable = () => {
           borderRadius: "10px",
           padding: "20px",
           boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)",
-          maxHeight: "400px", // Set a fixed height
-          overflowY: "auto", // Add vertical scrolling
+          maxHeight: "400px",
+          overflowY: "auto",
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -176,7 +184,7 @@ const CrazyAuditsTable = () => {
           </thead>
           <tbody>
             {filteredAudits.length > 0 ? (
-              filteredAudits.map((audit: any, index: number) => (
+              filteredAudits.map((audit: Audit, index: number) => (
                 <motion.tr
                   key={index}
                   style={{

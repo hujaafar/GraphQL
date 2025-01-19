@@ -5,6 +5,12 @@ import { useQuery } from "@apollo/client";
 import { GET_PROJECT_TRANSACTIONS } from "@/graphql/queries";
 import { motion } from "framer-motion";
 
+interface ProjectTransaction {
+  object: { name: string };
+  amount: number;
+  createdAt: string;
+}
+
 const CrazyProjectCards = () => {
   const { data, loading, error } = useQuery(GET_PROJECT_TRANSACTIONS);
   const [filter, setFilter] = useState("");
@@ -18,10 +24,11 @@ const CrazyProjectCards = () => {
       </p>
     );
 
-  const transactions = data?.transaction || [];
+  // Cast to ProjectTransaction[]
+  const transactions = (data?.transaction as ProjectTransaction[]) || [];
 
   // Filter transactions
-  const filteredTransactions = transactions.filter((transaction: any) =>
+  const filteredTransactions = transactions.filter((transaction: ProjectTransaction) =>
     transaction.object.name.toLowerCase().includes(filter.toLowerCase())
   );
 
@@ -104,7 +111,7 @@ const CrazyProjectCards = () => {
         }}
       >
         {filteredTransactions.length > 0 ? (
-          filteredTransactions.map((transaction: any, index: number) => {
+          filteredTransactions.map((transaction: ProjectTransaction, index: number) => {
             const amount = transaction.amount;
             const size =
               amount < 1000

@@ -22,6 +22,11 @@ interface XPData {
   percentage?: string;
 }
 
+interface CustomTooltipParams {
+  active?: boolean;
+  payload?: { payload?: XPData }[];
+}
+
 const SidebarXPChart = () => {
   const { data, loading, error } = useQuery(GET_TOTAL_AND_BREAKDOWN_XP);
 
@@ -62,9 +67,11 @@ const SidebarXPChart = () => {
   });
 
   // 6) Custom tooltip
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: CustomTooltipParams) => {
     if (active && payload && payload.length > 0) {
-      const dataItem: XPData = payload[0].payload;
+      const dataItem = payload[0].payload;
+      if (!dataItem) return null;
+
       return (
         <div
           style={{
@@ -76,7 +83,9 @@ const SidebarXPChart = () => {
           }}
         >
           <p style={{ fontWeight: "bold", marginBottom: 4 }}>{dataItem.name}</p>
-          <p>{dataItem.value.toFixed(1)} kB ({dataItem.percentage}%)</p>
+          <p>
+            {dataItem.value.toFixed(1)} kB ({dataItem.percentage}%)
+          </p>
         </div>
       );
     }
@@ -90,8 +99,6 @@ const SidebarXPChart = () => {
         padding: "20px",
         position: "relative",
         overflow: "hidden",
-
-        // Fancy background
         backgroundImage:
           "linear-gradient(90deg, #6a11cb, #2575fc, #ff6b6b, #51cf66, #ffd700)",
         backgroundSize: "600% 600%",
@@ -109,12 +116,21 @@ const SidebarXPChart = () => {
       }}
     >
       {/* Title */}
-      <h2 style={{ color: "#ffd700", textAlign: "center", marginBottom: "10px" }}>
+      <h2
+        style={{ color: "#ffd700", textAlign: "center", marginBottom: "10px" }}
+      >
         Total XP (KB)
       </h2>
 
       {/* XP Value */}
-      <div style={{ textAlign: "center", fontSize: "2rem", marginBottom: "10px", color: "#fff" }}>
+      <div
+        style={{
+          textAlign: "center",
+          fontSize: "2rem",
+          marginBottom: "10px",
+          color: "#fff",
+        }}
+      >
         {totalXP.toFixed(0)} <span style={{ color: "#ffd700" }}>kB</span>
       </div>
 
@@ -135,9 +151,12 @@ const SidebarXPChart = () => {
               <LabelList
                 dataKey="value"
                 position="right"
-                formatter={(val: number, item: any) => {
+                formatter={(
+                  val: number,
+                  item: { payload?: XPData }
+                ) => {
                   if (!item?.payload) return `${val.toFixed(1)} kB`;
-                  const { percentage } = item.payload as XPData;
+                  const { percentage } = item.payload;
                   if (!percentage) return `${val.toFixed(1)} kB`;
                   return `${val.toFixed(1)} kB (${percentage}%)`;
                 }}

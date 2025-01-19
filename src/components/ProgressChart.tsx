@@ -13,6 +13,14 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+interface Transaction {
+  object: {
+    name: string;
+  };
+  amount: number;
+  createdAt: string;
+}
+
 const CrazyProgressChart = () => {
   const { data, loading, error } = useQuery(GET_TRANSACTIONS);
 
@@ -25,10 +33,11 @@ const CrazyProgressChart = () => {
       </p>
     );
 
-  const transactions = data?.transaction || [];
+  // Cast to Transaction[]
+  const transactions = (data?.transaction as Transaction[]) || [];
 
   // Process data for the line chart
-  const chartData = transactions.map((transaction: any) => ({
+  const chartData = transactions.map((transaction: Transaction) => ({
     name: transaction.object.name,
     xp: transaction.amount,
     date: new Date(transaction.createdAt).toLocaleDateString(),
