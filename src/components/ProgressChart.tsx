@@ -33,10 +33,8 @@ const CrazyProgressChart = () => {
       </p>
     );
 
-  // Cast to Transaction[]
   const transactions = (data?.transaction as Transaction[]) || [];
 
-  // Process data for the line chart
   const chartData = transactions.map((transaction: Transaction) => ({
     name: transaction.object.name,
     xp: transaction.amount,
@@ -89,7 +87,6 @@ const CrazyProgressChart = () => {
         Progress Over Time
       </h2>
 
-      {/* Responsive Line Chart */}
       <div style={{ width: "100%", height: "400px", marginTop: "30px" }}>
         <ResponsiveContainer>
           <LineChart data={chartData}>

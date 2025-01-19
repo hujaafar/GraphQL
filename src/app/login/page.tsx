@@ -30,7 +30,7 @@ export default function LoginPage() {
       const token = await response.json();
       localStorage.setItem("authToken", token);
       window.location.href = "/profile";
-    } catch (err) {
+    } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
       } else {

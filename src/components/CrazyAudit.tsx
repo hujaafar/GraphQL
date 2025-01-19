@@ -3,16 +3,11 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
 import { GET_AUDIT_STATS } from "@/graphql/queries";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-} from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 const formatSize = (size: number) => {
   if (size >= 1000000) return `${Math.round((size / 1000000) * 100) / 100} MB`;
-  return `${Math.round(size / 1000)} kB`; // Proper rounding
+  return `${Math.round(size / 1000)} kB`; 
 };
 
 const CrazyAuditStats = () => {
@@ -43,8 +38,7 @@ const CrazyAuditStats = () => {
   return (
     <div
       style={{
-        background:
-          "radial-gradient(circle at top, #1a237e, #0d47a1, #311b92, #512da8)",
+        background: "radial-gradient(circle at top, #1a237e, #0d47a1, #311b92, #512da8)",
         padding: "40px",
         borderRadius: "20px",
         boxShadow: "0 15px 40px rgba(0, 0, 0, 0.4)",
@@ -84,7 +78,6 @@ const CrazyAuditStats = () => {
         }}
       ></div>
 
-      {/* Title */}
       <h2
         style={{
           fontSize: "2.2rem",
@@ -96,7 +89,6 @@ const CrazyAuditStats = () => {
         Audit Statistics
       </h2>
 
-      {/* Audit Ratio */}
       <div
         style={{
           fontSize: "3.5rem",
@@ -117,7 +109,6 @@ const CrazyAuditStats = () => {
         {ratioStyle.message}
       </p>
 
-      {/* Pie Chart */}
       <div style={{ width: "100%", height: "300px", marginTop: "30px" }}>
         <ResponsiveContainer>
           <PieChart>
@@ -133,7 +124,7 @@ const CrazyAuditStats = () => {
               endAngle={450}
               isAnimationActive
               paddingAngle={5}
-              cornerRadius={5} // Smooth corners for chart
+              cornerRadius={5}
             >
               {chartData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
@@ -143,7 +134,6 @@ const CrazyAuditStats = () => {
         </ResponsiveContainer>
       </div>
 
-      {/* Total Up and Total Down */}
       <div
         style={{
           marginTop: "20px",

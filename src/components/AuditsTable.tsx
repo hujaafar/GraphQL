@@ -24,11 +24,9 @@ const CrazyAuditsTable = () => {
       <p style={{ textAlign: "center", color: "#f44336" }}>Error fetching data</p>
     );
 
-  // Cast valid/failed audits to Audit[]
   const validAudits = (data?.user[0]?.validAudits?.nodes as Audit[]) || [];
   const failedAudits = (data?.user[0]?.failedAudits?.nodes as Audit[]) || [];
 
-  // Filter data based on audit type
   const auditsToDisplay =
     auditType === "valid"
       ? validAudits

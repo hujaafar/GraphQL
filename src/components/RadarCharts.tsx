@@ -1,20 +1,19 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useQuery } from '@apollo/client';
-import { GET_SKILL_TRANSACTIONS } from '@/graphql/queries';
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts';
+import React from "react";
+import { useQuery } from "@apollo/client";
+import { GET_SKILL_TRANSACTIONS } from "@/graphql/queries";
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
 
-// Helper function to process skill transactions
 const processSkillTransactions = (transactions: { type: string; amount: number }[]) => {
   const skillData: { [key: string]: number } = {};
 
   transactions.forEach((transaction) => {
-    const skillName = transaction.type.replace('skill_', '').replace('-', ' ').toUpperCase();
+    const skillName = transaction.type.replace("skill_", "").replace("-", " ").toUpperCase();
     skillData[skillName] = (skillData[skillName] || 0) + transaction.amount;
   });
 
-  return Object.entries(skillData).map(([name, amount]) => ({ name, value: amount }));
+  return Object.entries(skillData).map(([name, value]) => ({ name, value }));
 };
 
 const CrazyRadarChart = () => {
@@ -29,70 +28,70 @@ const CrazyRadarChart = () => {
   return (
     <div
       style={{
-        padding: '50px',
-        background: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)',
-        borderRadius: '25px',
-        boxShadow: '0px 20px 50px rgba(0, 0, 0, 0.5)',
-        maxWidth: '700px',
-        margin: '50px auto',
-        color: '#fff',
-        textAlign: 'center',
+        padding: "50px",
+        background: "linear-gradient(135deg, #0f0c29, #302b63, #24243e)",
+        borderRadius: "25px",
+        boxShadow: "0px 20px 50px rgba(0, 0, 0, 0.5)",
+        maxWidth: "700px",
+        margin: "50px auto",
+        color: "#fff",
+        textAlign: "center",
         fontFamily: "'Poppins', sans-serif",
-        position: 'relative',
-        overflow: 'hidden',
+        position: "relative",
+        overflow: "hidden",
       }}
     >
       {/* Floating Background Animation */}
       <div
         style={{
-          position: 'absolute',
-          top: '-50px',
-          right: '-50px',
-          width: '200px',
-          height: '200px',
-          background: 'rgba(255, 255, 255, 0.1)',
-          borderRadius: '50%',
-          filter: 'blur(80px)',
-          animation: 'pulse 8s infinite',
+          position: "absolute",
+          top: "-50px",
+          right: "-50px",
+          width: "200px",
+          height: "200px",
+          background: "rgba(255, 255, 255, 0.1)",
+          borderRadius: "50%",
+          filter: "blur(80px)",
+          animation: "pulse 8s infinite",
         }}
       />
       <div
         style={{
-          position: 'absolute',
-          bottom: '-50px',
-          left: '-50px',
-          width: '250px',
-          height: '250px',
-          background: 'rgba(255, 255, 255, 0.1)',
-          borderRadius: '50%',
-          filter: 'blur(80px)',
-          animation: 'pulse 10s infinite reverse',
+          position: "absolute",
+          bottom: "-50px",
+          left: "-50px",
+          width: "250px",
+          height: "250px",
+          background: "rgba(255, 255, 255, 0.1)",
+          borderRadius: "50%",
+          filter: "blur(80px)",
+          animation: "pulse 10s infinite reverse",
         }}
       />
 
       {/* Title */}
       <h2
         style={{
-          fontSize: '2.5rem',
-          fontWeight: 'bold',
-          marginBottom: '30px',
-          textShadow: '0px 10px 20px rgba(0,0,0,0.5)',
+          fontSize: "2.5rem",
+          fontWeight: "bold",
+          marginBottom: "30px",
+          textShadow: "0px 10px 20px rgba(0,0,0,0.5)",
         }}
       >
         Highest Skills
       </h2>
 
       {/* Radar Chart */}
-      <div style={{ width: '100%', height: '400px', marginTop: '30px' }}>
+      <div style={{ width: "100%", height: "400px", marginTop: "30px" }}>
         <ResponsiveContainer>
           <RadarChart data={radarData}>
             <PolarGrid stroke="rgba(255, 255, 255, 0.2)" />
             <PolarAngleAxis
               dataKey="name"
               tick={{
-                fill: '#fff',
+                fill: "#fff",
                 fontSize: 14,
-                fontWeight: 'bold',
+                fontWeight: "bold",
               }}
             />
             <Radar

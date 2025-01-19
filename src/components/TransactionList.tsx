@@ -24,10 +24,8 @@ const CrazyProjectCards = () => {
       </p>
     );
 
-  // Cast to ProjectTransaction[]
   const transactions = (data?.transaction as ProjectTransaction[]) || [];
 
-  // Filter transactions
   const filteredTransactions = transactions.filter((transaction: ProjectTransaction) =>
     transaction.object.name.toLowerCase().includes(filter.toLowerCase())
   );

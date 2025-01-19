@@ -39,18 +39,13 @@ const UserInfo = () => {
   const { id, login, email, attrs } = user;
   const parsedAttrs: UserAttrs = typeof attrs === "object" ? attrs : {};
 
-  // We'll define some random comets that drift across the screen
   const comets = Array.from({ length: 4 }, (_, i) => ({
     id: i,
-    top: Math.random() * 80, // random vertical position
-    delay: Math.random() * 3, // random start delay
+    top: Math.random() * 80,
+    delay: Math.random() * 3,
   }));
 
   return (
-    /**
-     * We animate a conic gradient for the "vortex"
-     * plus additional swirling orbs, plus comets crossing the screen.
-     */
     <motion.div
       style={{
         minHeight: "100vh",
@@ -59,13 +54,11 @@ const UserInfo = () => {
         alignItems: "center",
         justifyContent: "center",
         position: "relative",
-        // Use longhand background properties to avoid React warnings:
         backgroundImage:
           "conic-gradient(from 0deg at 50% 50%, #060d1f, #51237a, #0d47a1, #00695c, #5d4037, #4e342e, #51237a, #060d1f)",
         backgroundSize: "200% 200%",
         backgroundRepeat: "no-repeat",
       }}
-      // We'll rotate the conic gradient
       initial={{ backgroundPosition: "0% 50%" }}
       animate={{ backgroundPosition: ["100% 50%", "0% 50%", "100% 50%"] }}
       transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
@@ -103,7 +96,6 @@ const UserInfo = () => {
         animate={{ rotate: -360 }}
         transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
       />
-      {/* Additional swirl orbs */}
       <motion.div
         style={{
           position: "absolute",
@@ -121,7 +113,7 @@ const UserInfo = () => {
         transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
       />
 
-      {/* Comets crossing the screen */}
+      {/* Comets */}
       {comets.map((comet) => (
         <motion.div
           key={comet.id}
@@ -136,7 +128,7 @@ const UserInfo = () => {
             boxShadow: "0 0 10px rgba(255,255,255,0.5)",
           }}
           initial={{ x: -150 }}
-          animate={{ x: "120vw" }} // move across the screen
+          animate={{ x: "120vw" }}
           transition={{
             duration: 15 + Math.random() * 5,
             repeat: Infinity,
@@ -147,7 +139,7 @@ const UserInfo = () => {
         />
       ))}
 
-      {/* The main card with user info */}
+      {/* Main Card */}
       <div
         style={{
           position: "relative",
@@ -172,9 +164,8 @@ const UserInfo = () => {
             textShadow: "0 0 5px rgba(255, 255, 255, 0.6)",
           }}
         >
-        User Info
+          User Info
         </h1>
-        {/* Basic info */}
         <p style={{ marginBottom: "8px" }}>
           <strong>ID:</strong> {id || "N/A"}
         </p>
@@ -185,8 +176,7 @@ const UserInfo = () => {
           <strong>Email:</strong> {email || "N/A"}
         </p>
         <p style={{ marginBottom: "8px" }}>
-          <strong>Name:</strong> {parsedAttrs.firstName || login}{" "}
-          {parsedAttrs.lastName || ""}
+          <strong>Name:</strong> {parsedAttrs.firstName || login} {parsedAttrs.lastName || ""}
         </p>
 
         <hr style={{ margin: "20px 0", borderColor: "rgba(255,255,255,0.2)" }} />
@@ -218,15 +208,13 @@ const UserInfo = () => {
           </div>
           <div>
             <p>
-              <strong>Qualification:</strong>{" "}
-              {parsedAttrs.qualification || "N/A"}
+              <strong>Qualification:</strong> {parsedAttrs.qualification || "N/A"}
             </p>
             <p>
               <strong>Employment:</strong> {parsedAttrs.employment || "N/A"}
             </p>
             <p>
-              <strong>Place of Birth:</strong>{" "}
-              {parsedAttrs.placeOfBirth || "N/A"}
+              <strong>Place of Birth:</strong> {parsedAttrs.placeOfBirth || "N/A"}
             </p>
             <p>
               <strong>Street:</strong> {parsedAttrs.addressStreet || "N/A"}

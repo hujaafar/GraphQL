@@ -12,15 +12,11 @@ import UserInfo from "@/components/UserInfo";
 import SidebarXPChart from "@/components/XPOverviewCard";
 
 const ProfilePage = () => {
-  // Instead of defining handleLogout here, we just call logoutUser
-
   const logoutUser = () => {
     // Remove the token from localStorage
     localStorage.removeItem("authToken");
-  
     window.location.href = "/";
   };
-  
 
   return (
     <motion.div
@@ -31,8 +27,7 @@ const ProfilePage = () => {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        backgroundImage:
-          "linear-gradient(120deg, #ffafbd, #ffc3a0, #2193b0, #6dd5ed)",
+        backgroundImage: "linear-gradient(120deg, #ffafbd, #ffc3a0, #2193b0, #6dd5ed)",
         backgroundSize: "200% 200%",
         padding: "20px",
         color: "#fff",
@@ -55,12 +50,8 @@ const ProfilePage = () => {
             boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
             transition: "all 0.3s ease",
           }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.transform = "scale(1.05)")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.transform = "scale(1.0)")
-          }
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1.0)")}
         >
           Logout
         </button>
@@ -69,9 +60,7 @@ const ProfilePage = () => {
       {/* Page Title */}
       <div style={{ textAlign: "center", marginBottom: "40px" }}>
         <h1 style={{ fontSize: "3rem", fontWeight: "bold" }}>User Profile</h1>
-        <p style={{ fontSize: "1.2rem" }}>
-          Explore your progress, audits, and achievements.
-        </p>
+        <p style={{ fontSize: "1.2rem" }}>Explore your progress, audits, and achievements.</p>
       </div>
 
       {/* User Info Section */}

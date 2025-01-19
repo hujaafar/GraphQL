@@ -151,10 +151,7 @@ const SidebarXPChart = () => {
               <LabelList
                 dataKey="value"
                 position="right"
-                formatter={(
-                  val: number,
-                  item: { payload?: XPData }
-                ) => {
+                formatter={(val: number, item: { payload?: XPData }) => {
                   if (!item?.payload) return `${val.toFixed(1)} kB`;
                   const { percentage } = item.payload;
                   if (!percentage) return `${val.toFixed(1)} kB`;
