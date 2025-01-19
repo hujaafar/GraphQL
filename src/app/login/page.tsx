@@ -59,7 +59,7 @@ export default function LoginPage() {
         >
           <CardContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <Typography variant="h5" align="center" gutterBottom>
-              Welcome Back!
+              Welcome Back Rebooter!
             </Typography>
             <form onSubmit={handleSubmit}>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>

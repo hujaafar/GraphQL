@@ -12,17 +12,18 @@ import UserInfo from "@/components/UserInfo";
 import SidebarXPChart from "@/components/XPOverviewCard";
 
 const ProfilePage = () => {
-  const handleLogout = () => {
-    // Example logout logic
-    console.log("User logged out");
-    window.location.href = "/login"; // Replace with your logout logic
+  // Instead of defining handleLogout here, we just call logoutUser
+
+  const logoutUser = () => {
+    // Remove the token from localStorage
+    localStorage.removeItem("authToken");
+  
+    window.location.href = "/";
   };
+  
 
   return (
     <motion.div
-      /**
-       * Animate the same gradient background as LoginPage
-       */
       initial={{ backgroundPosition: "0% 50%" }}
       animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
       transition={{ duration: 10, repeat: Infinity }}
@@ -30,19 +31,18 @@ const ProfilePage = () => {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        // Same gradient as login:
         backgroundImage:
           "linear-gradient(120deg, #ffafbd, #ffc3a0, #2193b0, #6dd5ed)",
         backgroundSize: "200% 200%",
         padding: "20px",
-        color: "#fff", // light text for clarity on bright background
+        color: "#fff",
         fontFamily: "'Poppins', sans-serif",
       }}
     >
       {/* Logout Button */}
       <div style={{ textAlign: "right", marginBottom: "20px" }}>
         <button
-          onClick={handleLogout}
+          onClick={logoutUser}
           style={{
             padding: "10px 20px",
             background: "linear-gradient(90deg, #ff6b6b, #f7797d)",
