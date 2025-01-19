@@ -1,14 +1,21 @@
 "use client";
 
 import React from "react";
-import { ApolloProvider, ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
+import {
+  ApolloProvider,
+  ApolloClient,
+  InMemoryCache,
+  createHttpLink,
+} from "@apollo/client";
+// We import type NormalizedCacheObject
+import type { NormalizedCacheObject } from "@apollo/client";
 
-let client: ApolloClient<any>;
+let client: ApolloClient<NormalizedCacheObject>;
 
 // If we’re in the browser, read localStorage. Otherwise, skip it.
 if (typeof window !== "undefined") {
   const token = localStorage.getItem("authToken") || "";
-  client = new ApolloClient({
+  client = new ApolloClient<NormalizedCacheObject>({
     link: createHttpLink({
       uri: "https://learn.reboot01.com/api/graphql-engine/v1/graphql",
       headers: {
@@ -19,7 +26,7 @@ if (typeof window !== "undefined") {
   });
 } else {
   // Server-side fallback: no localStorage
-  client = new ApolloClient({
+  client = new ApolloClient<NormalizedCacheObject>({
     link: createHttpLink({
       uri: "https://learn.reboot01.com/api/graphql-engine/v1/graphql",
     }),

@@ -7,7 +7,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 const formatSize = (size: number) => {
   if (size >= 1000000) return `${Math.round((size / 1000000) * 100) / 100} MB`;
-  return `${Math.round(size / 1000)} kB`; 
+  return `${Math.round(size / 1000)} kB`;
 };
 
 const CrazyAuditStats = () => {
