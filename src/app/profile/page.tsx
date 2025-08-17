@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import AnimatedBackground from "@/components/AnimatedBackground";
 import CrazyAuditsTable from "@/components/AuditsTable";
 import CrazyAuditStats from "@/components/CrazyAudit";
 import RankDisplay from "@/components/LevelProgressChart";
@@ -19,19 +19,12 @@ const ProfilePage = () => {
   };
 
   return (
-    <motion.div
-      initial={{ backgroundPosition: "0% 50%" }}
-      animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-      transition={{ duration: 10, repeat: Infinity }}
+    <AnimatedBackground
       style={{
-        minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        backgroundImage: "linear-gradient(120deg, #ffafbd, #ffc3a0, #2193b0, #6dd5ed)",
-        backgroundSize: "200% 200%",
         padding: "20px",
         color: "#fff",
-        fontFamily: "'Poppins', sans-serif",
       }}
     >
       {/* Logout Button */}
@@ -107,7 +100,7 @@ const ProfilePage = () => {
       <div>
         <CrazyProjectCards />
       </div>
-    </motion.div>
+    </AnimatedBackground>
   );
 };
 
