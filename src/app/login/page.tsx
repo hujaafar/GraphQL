@@ -2,6 +2,7 @@
 import React, { useState, FormEvent } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, Typography, TextField, Button, Box } from "@mui/material";
+import AnimatedBackground from "@/components/AnimatedBackground";
 
 export default function LoginPage() {
   const [identifier, setIdentifier] = useState("");
@@ -40,22 +41,13 @@ export default function LoginPage() {
   };
 
   return (
-    <motion.div
-      initial={{ backgroundPosition: "0% 50%" }}
-      animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-      transition={{ duration: 10, repeat: Infinity }}
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundImage: "linear-gradient(120deg, #ffafbd, #ffc3a0, #2193b0, #6dd5ed)",
-        backgroundSize: "200% 200%",
-      }}
+    <AnimatedBackground
+      style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
     >
       <Box sx={{ display: "flex", justifyContent: "center", width: "100%", padding: 2 }}>
         <Card
           component={motion.div}
+          className="glass-card"
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", stiffness: 100, damping: 10 }}
@@ -103,6 +95,6 @@ export default function LoginPage() {
           </CardContent>
         </Card>
       </Box>
-    </motion.div>
+    </AnimatedBackground>
   );
 }
