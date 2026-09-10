@@ -48,7 +48,7 @@ export function JourneyHeader({
       <motion.div
         className="journey-image"
         aria-hidden="true"
-        style={reduce ? undefined : { y, scale }}
+        style={{ y: reduce ? 0 : y, scale: reduce ? 1 : scale }}
       />
       <div className="journey-content">
         <span className="eyebrow">YOUR LEARNING, CONNECTED</span>
