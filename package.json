@@ -6,14 +6,19 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test --test-concurrency=1 tests/*.test.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "build:static": "node scripts/export.mjs"
   },
   "dependencies": {
     "@apollo/client": "^3.12.5",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^6.3.1",
-    "@react-three/fiber": "^8.17.10",
+    "@react-three/fiber": "^9.7.0",
     "animejs": "^3.2.2",
     "daisyui": "^4.12.23",
     "framer-motion": "^11.17.0",
@@ -38,7 +43,7 @@
     "eslint": "^9",
     "eslint-config-next": "^15.5.25",
     "next": "^15.5.25",
-    "postcss": "^8.4.49",
+    "postcss": "^8.5.23",
     "prettier": "^3.9.6",
     "react": "19.0",
     "react-dom": "19.0",
@@ -46,9 +51,20 @@
     "tsx": "^4.23.13",
     "typescript": "^5.7.2"
   },
-  "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
-  "main": "postcss.config.js",
-  "keywords": [],
-  "author": "",
+  "overrides": {
+    "postcss": "$postcss"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "description": "Graphite: a cinematic Reboot01 learning dashboard powered by Next.js, Apollo GraphQL, and accessible data visualizations.",
+  "keywords": [
+    "graphql",
+    "reboot01",
+    "nextjs",
+    "learning-analytics",
+    "dashboard"
+  ],
+  "author": "hujaafar",
   "license": "ISC"
 }
