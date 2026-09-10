@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -22,19 +22,26 @@ export default function LoginPage() {
   const [visible, setVisible] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
+  const activeRequest = useRef<AbortController | null>(null);
   useEffect(() => {
     if (getSession()) router.replace("/profile");
+    return () => {
+      activeRequest.current?.abort();
+    };
   }, [router]);
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    if (pending) return;
+    if (activeRequest.current) return;
+    const request = new AbortController();
+    activeRequest.current = request;
     setPending(true);
     setError("");
     try {
-      await signIn(identifier, password);
+      await signIn(identifier, password, request.signal);
       setPassword("");
       router.replace("/profile");
     } catch (cause) {
+      if (request.signal.aborted) return;
       setError(
         cause instanceof TypeError
           ? "Couldn’t connect to Reboot01. Check your connection and try again."
@@ -45,7 +52,8 @@ export default function LoginPage() {
               : "Sign-in failed. Please try again.",
       );
     } finally {
-      setPending(false);
+      if (activeRequest.current === request) activeRequest.current = null;
+      if (!request.signal.aborted) setPending(false);
     }
   }
   return (

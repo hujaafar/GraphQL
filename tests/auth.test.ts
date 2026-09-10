@@ -159,3 +159,23 @@ test("rate limits, outages, and network failures remain failures", async () => {
   };
   await assert.rejects(signIn("alex", "secret"), /offline/);
 });
+
+test("cancelled sign-ins cannot create a late session", async () => {
+  installStorage();
+  const request = new AbortController();
+  globalThis.fetch = async () => {
+    request.abort();
+    return new Response(JSON.stringify(token(Math.floor(Date.now() / 1000) + 3600)));
+  };
+  await assert.rejects(signIn("alex", "secret", request.signal), { name: "AbortError" });
+  assert.equal(getSession(), null);
+});
+
+test("an already-cancelled sign-in never sends credentials", async () => {
+  const request = new AbortController();
+  request.abort();
+  globalThis.fetch = async () => {
+    assert.fail("No request should be sent");
+  };
+  await assert.rejects(signIn("alex", "secret", request.signal), { name: "AbortError" });
+});

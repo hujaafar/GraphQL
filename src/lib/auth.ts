@@ -66,18 +66,25 @@ export function encodeCredentials(identifier: string, password: string): string 
   return btoa(Array.from(bytes, (byte) => String.fromCharCode(byte)).join(""));
 }
 
-export async function signIn(identifier: string, password: string): Promise<void> {
+export async function signIn(
+  identifier: string,
+  password: string,
+  signal?: AbortSignal,
+): Promise<void> {
   const username = identifier.trim();
   if (!username || !password) throw new Error("Enter your username and password to continue.");
   // A colon separates the user-id from the password in HTTP Basic authentication.
   if (username.includes(":")) throw new Error("Enter a username or email without a colon.");
+  const timeout = AbortSignal.timeout(15000);
+  const requestSignal = signal ? AbortSignal.any([signal, timeout]) : timeout;
+  requestSignal.throwIfAborted();
   const response = await fetch(AUTH_ENDPOINT, {
     method: "POST",
     headers: {
       Authorization: `Basic ${encodeCredentials(username, password)}`,
       "Content-Type": "application/json",
     },
-    signal: AbortSignal.timeout(15000),
+    signal: requestSignal,
     cache: "no-store",
   });
   if (!response.ok) {
@@ -87,5 +94,7 @@ export async function signIn(identifier: string, password: string): Promise<void
       throw new Error("Too many attempts. Please wait a moment before trying again.");
     throw new Error("Reboot01 is unavailable right now. Please try again shortly.");
   }
-  saveSession(await response.json());
+  const token = await response.json();
+  requestSignal.throwIfAborted();
+  saveSession(token);
 }
