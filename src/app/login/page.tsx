@@ -1,108 +1,48 @@
 "use client";
-import React, { useState, FormEvent } from "react";
-import { motion } from "framer-motion";
-import { Card, CardContent, Typography, TextField, Button, Box } from "@mui/material";
+import { useEffect, useState, type FormEvent } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ArrowRight, ArrowUpRight, Eye, EyeOff, LockKeyhole, LoaderCircle, Network, ShieldCheck } from "lucide-react";
+import { Brand } from "@/components/Brand";
+import { getSession, signIn } from "@/lib/auth";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [visible, setVisible] = useState(false);
+  const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setError("");
-
-    try {
-      const basicAuth = btoa(`${identifier}:${password}`);
-      const response = await fetch("https://learn.reboot01.com/api/auth/signin", {
-        method: "POST",
-        headers: {
-          Authorization: `Basic ${basicAuth}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Invalid credentials. Please try again.");
-      }
-
-      const token = await response.json();
-      localStorage.setItem("authToken", token);
-      window.location.href = "/profile";
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("An unknown error occurred");
-      }
-    }
-  };
-
-  return (
-    <motion.div
-      initial={{ backgroundPosition: "0% 50%" }}
-      animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-      transition={{ duration: 10, repeat: Infinity }}
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundImage: "linear-gradient(120deg, #ffafbd, #ffc3a0, #2193b0, #6dd5ed)",
-        backgroundSize: "200% 200%",
-      }}
-    >
-      <Box sx={{ display: "flex", justifyContent: "center", width: "100%", padding: 2 }}>
-        <Card
-          component={motion.div}
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 100, damping: 10 }}
-          sx={{ width: 360, borderRadius: 3, boxShadow: 6 }}
-        >
-          <CardContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <Typography variant="h5" align="center" gutterBottom>
-              Welcome Back Rebooter!
-            </Typography>
-            <form onSubmit={handleSubmit}>
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <TextField
-                  label="Username or Email"
-                  type="text"
-                  fullWidth
-                  variant="outlined"
-                  value={identifier}
-                  onChange={(e) => setIdentifier(e.target.value)}
-                  required
-                />
-                <TextField
-                  label="Password"
-                  type="password"
-                  fullWidth
-                  variant="outlined"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-                {error && (
-                  <Typography color="error" variant="body2">
-                    {error}
-                  </Typography>
-                )}
-                <Button
-                  type="submit"
-                  variant="contained"
-                  size="large"
-                  sx={{ backgroundColor: "#1976d2", "&:hover": { backgroundColor: "#1565c0" } }}
-                >
-                  Log In
-                </Button>
-              </Box>
-            </form>
-          </CardContent>
-        </Card>
-      </Box>
-    </motion.div>
-  );
+  useEffect(() => { if (getSession()) router.replace("/profile"); }, [router]);
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+    if (pending) return;
+    setPending(true); setError("");
+    try { await signIn(identifier, password); setPassword(""); router.replace("/profile"); }
+    catch (cause) {
+      setError(cause instanceof TypeError ? "Couldn’t connect to Reboot01. Check your connection and try again." : cause instanceof Error && ["TimeoutError", "AbortError"].includes(cause.name) ? "The connection took too long. Please try again." : cause instanceof Error ? cause.message : "Sign-in failed. Please try again.");
+    } finally { setPending(false); }
+  }
+  return <main id="main" className="login-page">
+    <section className="login-editorial" aria-labelledby="editorial-title">
+      <div className="login-art" aria-hidden="true" />
+      <div className="editorial-top"><Brand/><span className="eyebrow">THE LEARNING GRAPH</span></div>
+      <div className="editorial-copy"><span className="eyebrow"><span className="status-dot"/> CONNECT THE DOTS</span><h1 id="editorial-title">Small steps.<br/><em>Extraordinary</em><br/>progress.</h1><p>Every project, every skill, every breakthrough.<br/>See how far you’ve come.</p></div>
+      <div className="editorial-bottom"><span>01 / YOUR NEXT CHAPTER</span><Network size={26}/><span>POWERED BY GRAPHQL</span></div>
+    </section>
+    <section className="login-panel" aria-labelledby="login-title">
+      <div className="login-panel-top"><span>Made for Reboot01</span><span className="outline-label">STUDENT WORKSPACE</span></div>
+      <div className="login-form-wrap">
+        <span className="login-icon"><ArrowUpRight size={28}/></span><p className="eyebrow">WELCOME BACK</p><h2 id="login-title">Your journey,<br/>in perspective.</h2><p className="muted">Sign in with your Reboot01 account.</p>
+        <form onSubmit={handleSubmit} className="login-form" aria-busy={pending}>
+          <label htmlFor="identifier">Username or email</label><input id="identifier" autoComplete="username" autoCapitalize="none" spellCheck={false} placeholder="Your Reboot01 username" value={identifier} onChange={event => setIdentifier(event.target.value)} required disabled={pending}/>
+          <label htmlFor="password">Password</label><div className="password-field"><input id="password" type={visible ? "text" : "password"} autoComplete="current-password" placeholder="Enter your password" value={password} onChange={event => setPassword(event.target.value)} required disabled={pending}/><button type="button" className="icon-button" onClick={() => setVisible(!visible)} aria-label={visible ? "Hide password" : "Show password"} aria-pressed={visible}>{visible ? <EyeOff size={19}/> : <Eye size={19}/>}</button></div>
+          {error && <p className="form-error" role="alert">{error}</p>}
+          <button className="button button-primary" type="submit" disabled={pending}>{pending ? "Signing in…" : "Open my workspace"}{pending ? <LoaderCircle size={19} className="spin"/> : <ArrowRight size={19}/>}</button>
+        </form>
+        <p className="login-security"><LockKeyhole size={15}/> Your password is sent only to Reboot01.</p><div className="login-divider"><span>TAKE A LOOK AROUND</span></div><Link href="/demo" className="button button-secondary">Explore the sample workspace <ArrowUpRight size={18}/></Link><p className="demo-note">Sample data. No account needed.</p>
+      </div>
+      <footer className="login-footer"><span><ShieldCheck size={16}/> A private view of your progress</span><a href="https://github.com/hujaafar/GraphQL" target="_blank" rel="noreferrer">View source <ArrowUpRight size={14}/></a></footer>
+    </section>
+  </main>;
 }
