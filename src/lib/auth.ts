@@ -33,17 +33,31 @@ export function getSession(): string | null {
 export function saveSession(token: unknown): void {
   if (!isValidSession(token))
     throw new Error("The server returned an invalid session. Please try signing in again.");
-  sessionStorage.setItem(TOKEN_KEY, token);
+  try {
+    sessionStorage.setItem(TOKEN_KEY, token);
+  } catch {
+    throw new Error(
+      "Your browser is blocking session storage. Allow storage for this site and try again.",
+    );
+  }
   // Retire the previous app's persistent token; new sessions last for this tab only.
-  localStorage.removeItem("authToken");
+  try {
+    localStorage.removeItem("authToken");
+  } catch {
+    /* Legacy storage can be blocked independently. */
+  }
 }
 
 export function clearSession(): void {
   try {
     sessionStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem("authToken");
   } catch {
     /* Storage may be disabled. */
+  }
+  try {
+    localStorage.removeItem("authToken");
+  } catch {
+    /* Always attempt both independent stores. */
   }
 }
 

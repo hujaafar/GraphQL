@@ -71,6 +71,35 @@ test("expired stored sessions are discarded", () => {
   assert.equal(sessionStorage.getItem("graphite.session"), null);
 });
 
+test("blocked legacy storage does not invalidate a newly saved session", () => {
+  installStorage();
+  Object.defineProperty(globalThis, "localStorage", {
+    get() {
+      throw new Error("blocked");
+    },
+    configurable: true,
+  });
+  const value = token(Math.floor(Date.now() / 1000) + 3600);
+  saveSession(value);
+  assert.equal(getSession(), value);
+  clearSession();
+  assert.equal(getSession(), null);
+});
+
+test("blocked session storage gives an actionable error", () => {
+  installStorage();
+  Object.defineProperty(globalThis, "sessionStorage", {
+    get() {
+      throw new Error("blocked");
+    },
+    configurable: true,
+  });
+  assert.throws(
+    () => saveSession(token(Math.floor(Date.now() / 1000) + 3600)),
+    /blocking session storage/,
+  );
+});
+
 test("server rendering has no session and rejected storage is handled", () => {
   assert.equal(getSession(), null);
   Object.defineProperty(globalThis, "window", { value: {}, configurable: true });
