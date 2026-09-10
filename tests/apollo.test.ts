@@ -89,3 +89,37 @@ test("API outages do not erase a valid session or return sample data", async () 
   assert.equal(getSession(), token);
   client.stop();
 });
+
+test("missing sessions prevent authenticated operations from reaching the network", async () => {
+  const events = installBrowser();
+  let requests = 0;
+  let expired = false;
+  events.addEventListener("graphite:session-expired", () => {
+    expired = true;
+  });
+  const client = createGraphQLClient(async () => {
+    requests++;
+    throw new Error("unexpected");
+  });
+  await assert.rejects(
+    client.query({ query, context: { headers: { Authorization: "Bearer stale" } } }),
+    /session has ended/,
+  );
+  assert.equal(requests, 0);
+  assert.equal(expired, true);
+  client.stop();
+});
+
+test("caller-supplied authorization cannot override the tab's current session", async () => {
+  installBrowser();
+  const value = jwt("current");
+  saveSession(value);
+  const client = createGraphQLClient(async (_, init) => {
+    assert.equal(new Headers(init?.headers).get("authorization"), `Bearer ${value}`);
+    return new Response(JSON.stringify({ data: { ping: "ok" } }), {
+      headers: { "content-type": "application/json" },
+    });
+  });
+  await client.query({ query, context: { headers: { authorization: "Bearer stale" } } });
+  client.stop();
+});

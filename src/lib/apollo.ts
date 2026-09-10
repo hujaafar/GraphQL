@@ -7,7 +7,14 @@ export function createGraphQLClient(fetcher: typeof fetch = fetch) {
   const auth = setContext((_, { headers }) => {
     // Resolve the tab's current token for every operation, including manual refreshes.
     const token = getSession();
-    return { headers: { ...headers, ...(token ? { Authorization: `Bearer ${token}` } : {}) } };
+    if (!token) {
+      if (typeof window !== "undefined")
+        window.dispatchEvent(new Event("graphite:session-expired"));
+      throw new Error("Your session has ended. Please sign in again.");
+    }
+    const currentHeaders = new Headers(headers);
+    currentHeaders.set("Authorization", `Bearer ${token}`);
+    return { headers: Object.fromEntries(currentHeaders.entries()) };
   });
   const errors = onError(({ graphQLErrors, networkError }) => {
     const expired =
