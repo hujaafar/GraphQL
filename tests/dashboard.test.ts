@@ -52,6 +52,8 @@ test("byte formatting remains valid for empty, exact-unit, and nonfinite amounts
   assert.equal(formatXP(NaN), "0 B");
   assert.equal(amountOf(undefined), 0);
   assert.equal(amountOf({ aggregate: { sum: null } }), 0);
+  assert.equal(amountOf({ aggregate: { sum: { amount: Infinity } } }), 0);
+  assert.equal(amountOf({ aggregate: { sum: { amount: -50 } } }), -50);
 });
 
 test("timeline carries prior XP into the selected period and fills empty months", () => {
@@ -121,6 +123,24 @@ test("projects combine multiple awards and grades without counting exercise XP",
   });
   assert.equal(results.find((project) => project.name === "forum")?.status, "In progress");
   assert.equal(results.find((project) => project.name === "net-cat")?.status, "Retry");
+});
+
+test("projects without progress need positive net XP to count as passed", () => {
+  const results = getProjects({
+    transactions: [
+      { amount: 0, createdAt: "2026-05-02", object: { name: "zero", type: "project" } },
+      { amount: NaN, createdAt: "2026-05-02", object: { name: "invalid", type: "project" } },
+      { amount: 100, createdAt: "2026-05-02", object: { name: "reversed", type: "project" } },
+      { amount: -100, createdAt: "2026-05-03", object: { name: "reversed", type: "project" } },
+      { amount: 10, createdAt: "2026-05-02", object: { name: "earned", type: "project" } },
+    ],
+    progress: [],
+  });
+  assert.deepEqual(
+    results.filter((project) => project.status === "Passed").map((project) => project.name),
+    ["earned"],
+  );
+  assert.equal(results.find((project) => project.name === "reversed")?.xp, 0);
 });
 
 test("profile attributes tolerate stringified, absent, and malformed values", () => {

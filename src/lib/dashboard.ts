@@ -67,7 +67,10 @@ export function formatXP(value: number, digits = 1) {
   if (Math.abs(n) >= 1000) return `${(n / 1000).toFixed(digits)} kB`;
   return `${Math.round(n)} B`;
 }
-export const amountOf = (value: Aggregate | undefined) => value?.aggregate?.sum?.amount || 0;
+export function amountOf(value: Aggregate | undefined) {
+  const amount = value?.aggregate?.sum?.amount;
+  return typeof amount === "number" && Number.isFinite(amount) ? amount : 0;
+}
 export function readableName(name: string) {
   return name.replace(/^skill_/, "").replace(/[-_]/g, " ");
 }
@@ -108,7 +111,7 @@ export function getProjects(data: Pick<DashboardData, "transactions" | "progress
       xp: 0,
       date: null,
       grade: null,
-      status: "Passed" as const,
+      status: "In progress" as const,
     };
     item.xp += Number.isFinite(transaction.amount) ? transaction.amount : 0;
     if (timestamp(transaction.createdAt) > timestamp(item.date)) item.date = transaction.createdAt;
@@ -126,13 +129,16 @@ export function getProjects(data: Pick<DashboardData, "transactions" | "progress
     };
     if (progress.grade !== null && Number.isFinite(progress.grade))
       item.grade = Math.max(item.grade ?? -Infinity, progress.grade);
+    projects.set(name, item);
+  }
+  // Determine the outcome after all awards and progress records have been combined.
+  for (const item of projects.values()) {
     item.status =
       item.xp > 0 || (item.grade !== null && item.grade >= 1)
         ? "Passed"
         : item.grade === null
           ? "In progress"
           : "Retry";
-    projects.set(name, item);
   }
   return [...projects.values()].sort(
     (a, b) => newestFirst(a.date, b.date) || a.name.localeCompare(b.name),
