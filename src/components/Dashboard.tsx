@@ -27,6 +27,7 @@ import {
   X,
 } from "lucide-react";
 import { MotionConfig, useReducedMotion } from "framer-motion";
+import { Pagination } from "./Pagination";
 import { Brand } from "./Brand";
 import { XPChart, SkillsChart } from "./Charts";
 import { JourneyHeader, Reveal } from "./Motion";
@@ -741,43 +742,5 @@ function ProjectRow({ project }: { project: Project }) {
       <td className="xp-value tabular">{formatXP(project.xp)}</td>
       <td className="muted">{project.date ? dateLabel(project.date) : "—"}</td>
     </tr>
-  );
-}
-function Pagination({
-  count,
-  page,
-  size,
-  onPage,
-  noun,
-}: {
-  count: number;
-  page: number;
-  size: number;
-  onPage: (page: number) => void;
-  noun: string;
-}) {
-  return (
-    <div className="pagination">
-      <span role="status">
-        {count ? `${page * size + 1}–${Math.min(count, (page + 1) * size)} of ${count}` : "0"}{" "}
-        {noun}
-      </span>
-      <div>
-        <button
-          disabled={page === 0}
-          onClick={() => onPage(page - 1)}
-          aria-label={`Previous ${noun} page`}
-        >
-          Previous
-        </button>
-        <button
-          disabled={(page + 1) * size >= count}
-          onClick={() => onPage(page + 1)}
-          aria-label={`Next ${noun} page`}
-        >
-          Next <ArrowRight size={14} />
-        </button>
-      </div>
-    </div>
   );
 }
