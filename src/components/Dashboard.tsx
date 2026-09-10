@@ -222,7 +222,7 @@ export function Dashboard({
               )}
             </div>
           </header>
-          <main id="main" className="dashboard-main">
+          <main id="main" tabIndex={-1} className="dashboard-main">
             {demo && (
               <div className="demo-banner">
                 <span>
@@ -239,7 +239,7 @@ export function Dashboard({
                 Couldn’t refresh your data. Showing your last loaded results; try refreshing again.
               </p>
             )}
-            <section id="overview" className="overview-section">
+            <section id="overview" tabIndex={-1} className="overview-section">
               <div className="section-topline">
                 <span className="eyebrow">OVERVIEW</span>
                 {onRefresh && (

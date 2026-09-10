@@ -57,7 +57,7 @@ export default function LoginPage() {
     }
   }
   return (
-    <main id="main" className="login-page">
+    <main id="main" tabIndex={-1} className="login-page">
       <section className="login-editorial" aria-labelledby="editorial-title">
         <div className="login-art" aria-hidden="true" />
         <div className="editorial-top">

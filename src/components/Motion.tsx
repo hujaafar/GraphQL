@@ -15,6 +15,7 @@ export function Reveal({
   return (
     <motion.section
       id={id}
+      tabIndex={id ? -1 : undefined}
       className={className}
       initial={false}
       whileInView={{ opacity: 1, y: 0 }}

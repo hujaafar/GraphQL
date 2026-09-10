@@ -55,7 +55,7 @@ export default function ProfilePage() {
   const current = data || previousData;
   if (!ready || (loading && !current))
     return (
-      <main id="main" className="route-state">
+      <main id="main" tabIndex={-1} className="route-state">
         <Brand />
         <LoaderCircle size={30} className="spin" />
         <h1>Connecting your learning.</h1>
@@ -64,7 +64,7 @@ export default function ProfilePage() {
     );
   if (!current || !current.user.length)
     return (
-      <main id="main" className="route-state">
+      <main id="main" tabIndex={-1} className="route-state">
         <Brand />
         <h1>{error ? "We couldn’t load your workspace." : "No learner profile was returned."}</h1>
         <p>

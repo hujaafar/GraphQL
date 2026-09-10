@@ -47,7 +47,7 @@ export function XPChart({
           <p className="panel-kicker">EXPERIENCE</p>
           <h2>Your growth over time</h2>
         </div>
-        <div className="segmented" aria-label="XP time range">
+        <div className="segmented" role="group" aria-label="XP time range">
           {(["3m", "6m", "all"] as const).map((value) => (
             <button
               key={value}
