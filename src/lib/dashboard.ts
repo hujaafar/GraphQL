@@ -1,3 +1,5 @@
+import { newestFirst, timestamp } from "./dates";
+
 export type Transaction = {
   amount: number;
   createdAt: string;
@@ -109,11 +111,7 @@ export function getProjects(data: Pick<DashboardData, "transactions" | "progress
       status: "Passed" as const,
     };
     item.xp += Number.isFinite(transaction.amount) ? transaction.amount : 0;
-    if (
-      !Number.isNaN(Date.parse(transaction.createdAt)) &&
-      (!item.date || transaction.createdAt > item.date)
-    )
-      item.date = transaction.createdAt;
+    if (timestamp(transaction.createdAt) > timestamp(item.date)) item.date = transaction.createdAt;
     projects.set(name, item);
   }
   for (const progress of data.progress) {
@@ -137,7 +135,7 @@ export function getProjects(data: Pick<DashboardData, "transactions" | "progress
     projects.set(name, item);
   }
   return [...projects.values()].sort(
-    (a, b) => (b.date || "").localeCompare(a.date || "") || a.name.localeCompare(b.name),
+    (a, b) => newestFirst(a.date, b.date) || a.name.localeCompare(b.name),
   );
 }
 
@@ -186,5 +184,5 @@ export function getAudits(user: Learner) {
     ...(user.failedAudits?.nodes || []).map((node) => ({ ...node, status: "Failed" as const })),
   ]
     .filter((node) => node.group)
-    .sort((a, b) => (b.group?.createdAt || "").localeCompare(a.group?.createdAt || ""));
+    .sort((a, b) => newestFirst(a.group?.createdAt, b.group?.createdAt));
 }
