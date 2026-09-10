@@ -7,6 +7,10 @@ export type Transaction = {
 };
 export type Aggregate = { aggregate: { sum: { amount: number | null } | null } | null };
 export type AuditNode = { group: { captainLogin: string; createdAt: string } | null };
+export type Audit = {
+  group: NonNullable<AuditNode["group"]>;
+  status: "Passed" | "Failed";
+};
 export type Learner = {
   id: number;
   login: string;
@@ -184,11 +188,11 @@ export function getTimeline(transactions: Transaction[], period: Period, anchor:
   return points;
 }
 
-export function getAudits(user: Learner) {
+export function getAudits(user: Learner): Audit[] {
   return [
     ...(user.validAudits?.nodes || []).map((node) => ({ ...node, status: "Passed" as const })),
     ...(user.failedAudits?.nodes || []).map((node) => ({ ...node, status: "Failed" as const })),
   ]
-    .filter((node) => node.group)
-    .sort((a, b) => newestFirst(a.group?.createdAt, b.group?.createdAt));
+    .filter((node): node is Audit => node.group !== null)
+    .sort((a, b) => newestFirst(a.group.createdAt, b.group.createdAt));
 }
