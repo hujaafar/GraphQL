@@ -103,16 +103,25 @@ export default function LoginPage() {
             in perspective.
           </h2>
           <p className="muted">Sign in with your Reboot01 account.</p>
-          <form onSubmit={handleSubmit} className="login-form" aria-busy={pending}>
+          <form
+            onSubmit={handleSubmit}
+            className="login-form"
+            aria-busy={pending}
+            aria-labelledby="login-title"
+          >
             <label htmlFor="identifier">Username or email</label>
             <input
               id="identifier"
               autoComplete="username"
               autoCapitalize="none"
+              aria-describedby={error ? "login-error" : undefined}
               spellCheck={false}
               placeholder="Your Reboot01 username"
               value={identifier}
-              onChange={(event) => setIdentifier(event.target.value)}
+              onChange={(event) => {
+                setIdentifier(event.target.value);
+                setError("");
+              }}
               required
               disabled={pending}
             />
@@ -122,9 +131,13 @@ export default function LoginPage() {
                 id="password"
                 type={visible ? "text" : "password"}
                 autoComplete="current-password"
+                aria-describedby={error ? "login-error" : undefined}
                 placeholder="Enter your password"
                 value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                  setError("");
+                }}
                 required
                 disabled={pending}
               />
@@ -134,12 +147,13 @@ export default function LoginPage() {
                 onClick={() => setVisible(!visible)}
                 aria-label={visible ? "Hide password" : "Show password"}
                 aria-pressed={visible}
+                aria-controls="password"
               >
                 {visible ? <EyeOff size={19} /> : <Eye size={19} />}
               </button>
             </div>
             {error && (
-              <p className="form-error" role="alert">
+              <p id="login-error" className="form-error" role="alert">
                 {error}
               </p>
             )}
