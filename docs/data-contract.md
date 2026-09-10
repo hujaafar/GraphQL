@@ -19,10 +19,12 @@ The dashboard operation builds on the original repository's Reboot01 schema. The
 ## Display conventions
 
 - XP uses decimal units: 1 kB = 1,000 B; 1 MB = 1,000,000 B, matching the original project.
-- A project with XP or a grade of at least 1 is passed. A recorded grade below 1 is shown as retry. A missing grade without XP is in progress. The UI labels grades as **best grade** because multiple progress records are consolidated.
+- A project with positive net XP or a grade of at least 1 is passed. A recorded grade below 1 without positive XP is shown as retry. A missing grade without positive XP is in progress. Zero awards, reversed awards, and nonfinite amounts alone cannot imply a pass. The UI labels grades as **best grade** because multiple progress records are consolidated.
 - The project list combines progress records from all projects with XP from the selected module. Projects outside the module can therefore show a grade and 0 module XP.
 - Audit rows say **Group created**. That field is not the timestamp when an audit was completed; the label deliberately preserves the meaning of the available data.
 - The 3M and 6M chart controls show calendar months including the current month. Dates use UTC to keep month boundaries consistent.
+- Latest award and audit ordering compare parsed instants, including timezone offsets; invalid or missing dates sort last. Missing dates display as an em dash. Invalid aggregate amounts display as zero.
+- Project search accepts both the displayed names and original slugs, ignoring case, repeated spaces, hyphens, and underscores.
 - `attrs` accepts an object or a stringified object. Missing and malformed values display safely as not provided.
 - Empty data is not replaced with sample data. All zero and missing cases are handled directly.
 

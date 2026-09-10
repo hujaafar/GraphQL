@@ -6,6 +6,8 @@
 
 Graphite brings experience, projects, skills, and peer feedback into one considered workspace. It connects to a student's existing Reboot01 account and provides a separate, clearly labeled sample workspace for exploring the interface without credentials.
 
+[Open Graphite](https://graph-ql-eh1l.vercel.app/) · [Explore the sample workspace](https://graph-ql-eh1l.vercel.app/demo/) · [Changelog](CHANGELOG.md)
+
 ## The experience
 
 - **A clear overview:** module XP, passed projects, audit ratio, and current level.
@@ -50,7 +52,7 @@ npm start
 
 For static hosting, use `npm run build:static` and publish the generated `out/` directory. The normal build retains Next.js and Vercel compatibility. API requests still go directly from the browser to Reboot01, so the upstream service must allow the deployed origin.
 
-The test suite covers token expiry, failed sign-ins, UTF-8 credentials, current-token request headers, GraphQL failures, module scopes, ranks, skill maxima, project aggregation, and XP reconciliation. GitHub Actions runs formatting, lint, types, tests, and the static build for pull requests and updates to `main`.
+The test suite covers token expiry, blocked storage, cancelled and failed sign-ins, UTF-8 credentials, current-token request headers, GraphQL failures, module scopes, ranks, skill maxima, project outcomes, human-readable search, timezone ordering, and XP reconciliation. GitHub Actions runs formatting, lint, types, tests, and the static build for pull requests and updates to `main`.
 
 ## Inside the repository
 
