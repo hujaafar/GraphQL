@@ -687,6 +687,9 @@ summary:focus-visible {
   min-height: 32px;
   border: 1px solid var(--line);
 }
+.topbar-right > .mobile-session-action {
+  display: none;
+}
 .dashboard-main {
   max-width: 1580px;
   margin: 0 auto;
@@ -2067,8 +2070,11 @@ summary:focus-visible {
     gap: 10px;
   }
   .topbar-right > .icon-button {
-    min-width: 28px;
-    min-height: 28px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+  .topbar-right > .mobile-session-action {
+    display: inline-flex;
   }
   .dashboard-main {
     padding: 18px 17px 0;

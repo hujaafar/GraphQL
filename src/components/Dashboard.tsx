@@ -210,6 +210,16 @@ export function Dashboard({
               >
                 {reduced ? <Play size={16} /> : <Pause size={16} />}
               </button>
+              {!demo && onLogout && (
+                <button
+                  className="icon-button mobile-session-action"
+                  onClick={onLogout}
+                  aria-label="Sign out"
+                  title="Sign out"
+                >
+                  <LogOut size={18} />
+                </button>
+              )}
             </div>
           </header>
           <main id="main" className="dashboard-main">
