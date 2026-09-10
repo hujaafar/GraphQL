@@ -1,17 +1,19 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Check, ChevronDown, Code2, Search, X } from "lucide-react";
 import { formatXP, readableName, type Project } from "@/lib/dashboard";
 import { formatDate } from "@/lib/dates";
+import { matchesProjectName } from "@/lib/project-search";
 import { Pagination } from "./Pagination";
 
 export function ProjectTable({ projects }: { projects: Project[] }) {
+  const searchInput = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
   const [projectStatus, setProjectStatus] = useState("All projects");
   const [projectPage, setProjectPage] = useState(0);
   const filteredProjects = projects.filter(
     (project) =>
-      project.name.toLowerCase().includes(query.trim().toLowerCase()) &&
+      matchesProjectName(project.name, query) &&
       (projectStatus === "All projects" || project.status === projectStatus),
   );
   const projectPageSafe = Math.min(
@@ -27,6 +29,7 @@ export function ProjectTable({ projects }: { projects: Project[] }) {
             Search projects
           </label>
           <input
+            ref={searchInput}
             id="project-search"
             placeholder="Find a project…"
             value={query}
@@ -42,6 +45,7 @@ export function ProjectTable({ projects }: { projects: Project[] }) {
               onClick={() => {
                 setQuery("");
                 setProjectPage(0);
+                searchInput.current?.focus();
               }}
             >
               <X size={15} />
