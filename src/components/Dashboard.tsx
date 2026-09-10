@@ -30,6 +30,7 @@ import { ProfileCard } from "./ProfileCard";
 import { Brand } from "./Brand";
 import { XPChart, SkillsChart } from "./Charts";
 import { JourneyHeader, Reveal } from "./Motion";
+import { formatDate } from "@/lib/dates";
 import {
   amountOf,
   formatXP,
@@ -48,17 +49,6 @@ const nav = [
   { id: "audits", label: "Peer audits", icon: Users },
   { id: "account", label: "My profile", icon: Fingerprint },
 ];
-function dateLabel(date: string) {
-  const value = new Date(date);
-  return Number.isNaN(value.getTime())
-    ? "—"
-    : value.toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        timeZone: "UTC",
-      });
-}
 
 export function Dashboard({
   data,
@@ -183,11 +173,27 @@ export function Dashboard({
               <strong>{nav.find((item) => item.id === active)?.label}</strong>
             </div>
             <div className="topbar-right">
-              <span className="connection-label">
+              <span
+                className={`connection-label ${refreshError ? "connection-stale" : ""}`}
+                role="status"
+              >
                 <span className="status-dot" />
-                {demo ? "Sample workspace" : "Reboot01 connected"}
+                {demo
+                  ? "Sample workspace"
+                  : refreshing
+                    ? "Updating workspace…"
+                    : refreshError
+                      ? "Refresh unavailable"
+                      : "Reboot01 connected"}
               </span>
-              <span className="topbar-date">{dateLabel(anchor)}</span>
+              <time
+                className="topbar-date"
+                dateTime={anchor || undefined}
+                title={demo ? "Sample data date" : "Last successful data load"}
+              >
+                <span className="sr-only">{demo ? "Sample date: " : "Last loaded: "}</span>
+                {formatDate(anchor)}
+              </time>
               <button
                 className="icon-button"
                 onClick={() => setPaused(!paused)}

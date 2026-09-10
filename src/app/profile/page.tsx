@@ -31,7 +31,6 @@ export default function ProfilePage() {
       return;
     }
     setReady(true);
-    setAnchor(new Date().toISOString());
     const check = () => {
       if (!getSession()) logout();
     };
@@ -44,16 +43,19 @@ export default function ProfilePage() {
       window.removeEventListener("focus", check);
     };
   }, [logout, router]);
+  useEffect(() => {
+    // Keep the previous timestamp when a refresh fails or is still in flight.
+    if (data && !loading && !error) setAnchor(new Date().toISOString());
+  }, [data, loading, error]);
   async function refresh() {
     try {
       await refetch();
-      setAnchor(new Date().toISOString());
     } catch {
       /* The query error is presented in the workspace. */
     }
   }
   const current = data || previousData;
-  if (!ready || (loading && !current))
+  if (!ready || (loading && !current) || (current && !anchor && !error))
     return (
       <main id="main" tabIndex={-1} className="route-state">
         <Brand />
