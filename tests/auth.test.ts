@@ -137,6 +137,18 @@ test("failed logins and invalid successful responses never create sessions", asy
   assert.equal(getSession(), null);
 });
 
+test("missing and ambiguous credentials are rejected before a network request", async () => {
+  let requests = 0;
+  globalThis.fetch = async () => {
+    requests++;
+    throw new Error("unexpected request");
+  };
+  await assert.rejects(signIn("   ", "secret"), /username and password/);
+  await assert.rejects(signIn("alex", ""), /username and password/);
+  await assert.rejects(signIn("alex:other", "secret"), /without a colon/);
+  assert.equal(requests, 0);
+});
+
 test("rate limits, outages, and network failures remain failures", async () => {
   globalThis.fetch = async () => new Response(null, { status: 429 });
   await assert.rejects(signIn("alex", "secret"), /Too many attempts/);

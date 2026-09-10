@@ -67,10 +67,14 @@ export function encodeCredentials(identifier: string, password: string): string 
 }
 
 export async function signIn(identifier: string, password: string): Promise<void> {
+  const username = identifier.trim();
+  if (!username || !password) throw new Error("Enter your username and password to continue.");
+  // A colon separates the user-id from the password in HTTP Basic authentication.
+  if (username.includes(":")) throw new Error("Enter a username or email without a colon.");
   const response = await fetch(AUTH_ENDPOINT, {
     method: "POST",
     headers: {
-      Authorization: `Basic ${encodeCredentials(identifier.trim(), password)}`,
+      Authorization: `Basic ${encodeCredentials(username, password)}`,
       "Content-Type": "application/json",
     },
     signal: AbortSignal.timeout(15000),
